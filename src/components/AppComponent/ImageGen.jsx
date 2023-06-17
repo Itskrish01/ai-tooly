@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Image } from "primereact/image";
 import { ProgressBar } from "primereact/progressbar";
 import { Toast } from "primereact/toast";
+import { useRef } from "react";
 
 const ImageGen = () => {
   const toast = useRef(null);
@@ -47,6 +48,12 @@ const ImageGen = () => {
         setImagesResults(response?.data.results.images);
       } catch (error) {
         console.error(error);
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Something went wrong, Please try again later",
+          life: 3000,
+        });
       }
       setIsLoading(false);
     },
