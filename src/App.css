@@ -1,0 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800&display=swap");
+
+.robot-slab {
+  font-family: "Roboto Slab", serif;
+}
+
+.cabin-font {
+  font-family: "Cabin", sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #979797;
+  border-radius: 100px;
+}
