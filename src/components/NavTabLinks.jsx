@@ -9,7 +9,7 @@ const NavTabLinks = () => {
     setActiveApp(value);
   };
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 flex-wrap">
       <TabLink
         icon={<i className="pi pi-language"></i>}
         value={"translate"}

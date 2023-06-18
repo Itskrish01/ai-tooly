@@ -22,3 +22,7 @@
   background: #979797;
   border-radius: 100px;
 }
+
+.p-sidebar-content {
+  padding: 0 !important;
+}

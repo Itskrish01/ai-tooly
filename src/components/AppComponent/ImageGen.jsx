@@ -19,7 +19,7 @@ const ImageGen = () => {
     url: "https://ai-image-generator3.p.rapidapi.com/generate",
     headers: {
       "content-type": "application/json",
-      "X-RapidAPI-Key": "a244a76a06msh533558e4eb0c0e0p1a2050jsn84873ca3f3a9",
+      "X-RapidAPI-Key": "9f7697b11dmsh392737e66bf0befp13cfafjsn205dbfa5888c",
       "X-RapidAPI-Host": "ai-image-generator3.p.rapidapi.com",
     },
     data: {
