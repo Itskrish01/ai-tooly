@@ -9,7 +9,7 @@ const TabLink = ({ icon, name, handleClick, value, active }) => {
       onClick={() => handleClick(value)}
     >
       {icon}
-      <p className="sm:text-base text-sm">{name}</p>
+      <p className="sm:text-base text-sm whitespace-nowrap">{name}</p>
     </div>
   );
 };

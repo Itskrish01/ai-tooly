@@ -8,11 +8,31 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { Sidebar } from "primereact/sidebar";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { TabMenu } from "primereact/tabmenu";
+import { useContext } from "react";
+import { AppContext } from "../../context";
 
 const Translate = () => {
   const toast = useRef(null);
+
+  const [fromLanguage, setFromLanguage] = useState([
+    { label: "Hindi", langcode: "hi" },
+    { label: "English", langcode: "en" },
+    { label: "Japanese", langcode: "ja" },
+  ]);
+  const [toLanguage, setToLanguage] = useState([
+    { label: "English", langcode: "en" },
+    { label: "Hindi", langcode: "hi" },
+    { label: "Japanese", langcode: "ja" },
+  ]);
   const [visibleLeft, setVisibleLeft] = useState(false);
+  const [activeIndex, setActiveIndex] = useState("null");
+  const [activeIndex2, setActiveIndex2] = useState("null");
+  const [filterWord, setFilterWord] = useState("");
   const textareaRef = useRef(null);
+
+  const [fromLanguageShow, setFromLanguageShow] = useState(false);
+  const [toLanguageShow, setToLanguageShow] = useState(false);
   const [activeLanguage, setActiveLanguage] = useState("");
   const [activeLanguage2, setActiveLanguage2] = useState("");
   const [translationss, setTranslations] = useState([]);
@@ -20,17 +40,12 @@ const Translate = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
   const [value, setValue] = useState("");
-  const [sourcelang, setSourceLang] = useState("");
-  const [sourcelangFull, setSourceLangFull] = useState("");
-  const [targetlang, setTargetLang] = useState("");
-  const [targetlangFull, setTargetLangFull] = useState("");
 
   useEffect(() => {
     const storedTranslations = localStorage.getItem("translations");
     if (storedTranslations) {
       const translations = JSON.parse(storedTranslations);
       setTranslations(translations);
-      console.log(translations);
     }
   }, [translateResult]);
 
@@ -83,8 +98,8 @@ const Translate = () => {
       "X-RapidAPI-Host": "rapid-translate-multi-traduction.p.rapidapi.com",
     },
     data: {
-      from: sourcelang,
-      to: targetlang,
+      from: activeLanguage.langcode,
+      to: activeLanguage2.langcode,
       q: value,
     },
   };
@@ -108,12 +123,13 @@ const Translate = () => {
     setIsLoading(true);
     try {
       const response = await axios.request(options);
+      console.log(response);
       const translationObject = {
         id: uuidv4(),
         translation: response.data[0],
         value: value,
-        sourcelang: sourcelangFull,
-        targetlang: targetlangFull,
+        sourcelang: activeLanguage.label,
+        targetlang: activeLanguage2.label,
       };
       setTranslationResult(translationObject.translation);
 
@@ -122,7 +138,8 @@ const Translate = () => {
       toast.current.show({
         severity: "error",
         summary: "Error",
-        detail: "Something went wrong, please try again later",
+        detail:
+          "Something went wrong, please try again later or the language is not supported.",
         life: 5000,
       });
       console.error(error);
@@ -136,10 +153,123 @@ const Translate = () => {
     textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
   };
 
-  console.log(activeLanguage);
+  const handleLanguageClick = (language) => {
+    // Create a new array with the clicked language at the beginning
+    const updatedFromLanguage = [
+      language,
+      ...fromLanguage.slice(0, fromLanguage.length - 1),
+    ];
+
+    // Update the fromLanguage state with the modified array
+    setFromLanguage(updatedFromLanguage);
+
+    // Update the active index and language
+    setActiveIndex(0);
+    setActiveLanguage(language);
+  };
+
+  const handleLanguage2Click = (language) => {
+    // Create a new array with the clicked language at the beginning
+    const updatedFromLanguage = [
+      language,
+      ...toLanguage.slice(0, toLanguage.length - 1),
+    ];
+
+    // Update the fromLanguage state with the modified array
+    setToLanguage(updatedFromLanguage);
+
+    // Update the active index and language
+    setActiveIndex2(0);
+    setActiveLanguage2(language);
+  };
 
   return (
     <>
+      <Sidebar
+        visible={fromLanguageShow}
+        fullScreen
+        onHide={() => setFromLanguageShow(false)}
+      >
+        <input
+          type="text"
+          placeholder="Search Language..."
+          value={filterWord}
+          onChange={(e) => setFilterWord(e.target.value)}
+          className="border border-gray-200 w-full px-6 py-5 focus:outline-none shadow-sm text-gray-500"
+        />
+        <div className="px-6">
+          <div className="mt-4 grid-cols-1 grid gap-2 md:grid-cols-4 lg:grid-cols-6">
+            {Languages.filter((item) =>
+              item.label.includes(
+                filterWord.charAt(0).toUpperCase() + filterWord.slice(1)
+              )
+            ).map((language) => {
+              return (
+                <div
+                  key={language.langcode}
+                  onClick={() => {
+                    handleLanguageClick(language);
+                    setTimeout(() => {
+                      setFromLanguageShow(false);
+                      setFilterWord("");
+                    }, 200);
+                  }}
+                  className={`${
+                    language.label === activeLanguage.label
+                      ? "bg-indigo-500/70 text-white"
+                      : "hover:bg-gray-200"
+                  } cursor-pointer px-4 py-2 rounded-md `}
+                >
+                  {language.label}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </Sidebar>
+      <Sidebar
+        visible={toLanguageShow}
+        fullScreen
+        onHide={() => setToLanguageShow(false)}
+      >
+        <input
+          type="text"
+          placeholder="Search Language..."
+          value={filterWord}
+          onChange={(e) => setFilterWord(e.target.value)}
+          className="border border-gray-200 w-full px-6 py-5 focus:outline-none shadow-sm text-gray-500"
+        />
+        <div className="px-6">
+          <div className="mt-4 grid-cols-1 grid gap-2 md:grid-cols-4 lg:grid-cols-6">
+            {Languages.filter((item) =>
+              item.label.includes(
+                filterWord.charAt(0).toUpperCase() + filterWord.slice(1)
+              )
+            ).map((language) => {
+              return (
+                <div
+                  key={language.langcode}
+                  onClick={() => {
+                    handleLanguage2Click(language);
+                    setTimeout(() => {
+                      setToLanguageShow(false);
+                      setFilterWord("");
+                    }, 200);
+                  }}
+                  className={`${
+                    language.label === activeLanguage2.label
+                      ? "bg-indigo-500/70 text-white"
+                      : "hover:bg-gray-200"
+                  } cursor-pointer px-4 py-2 rounded-md `}
+                >
+                  {language.label}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </Sidebar>
+
       <Sidebar
         visible={visibleLeft}
         position="right"
@@ -184,12 +314,12 @@ const Translate = () => {
                   <div className="p-5 ">
                     <div className="flex justify-between items-center">
                       <div className="flex gap-4 items-center">
-                        <span className="text-xs">{item.sourcelang.name}</span>{" "}
+                        <span className="text-xs">{item.sourcelang}</span>{" "}
                         <i
                           className="pi pi-arrow-right"
                           style={{ fontSize: 10 }}
                         ></i>
-                        <span className="text-xs">{item.targetlang.name}</span>
+                        <span className="text-xs">{item.targetlang}</span>
                       </div>
                       <div onClick={() => handleDelete(item.id)}>
                         <i className="pi pi-trash text-red-500 cursor-pointer"></i>
@@ -209,22 +339,30 @@ const Translate = () => {
       <Toast ref={toast} />
       <div className="mt-10 grid sm:grid-cols-2 grid-cols-1 gap-5">
         <div>
-          <div className="flex">
-            <Dropdown
-              value={activeLanguage}
-              onChange={(e) => {
+          <div className="flex gap-5">
+            <TabMenu
+              model={fromLanguage}
+              className="ml-2"
+              activeIndex={activeIndex}
+              onTabChange={(e) => {
                 setActiveLanguage(e.value);
-                setSourceLang(e.value.code);
-                setSourceLangFull(e.value);
+                setActiveIndex(e.index);
               }}
-              options={Languages}
-              optionLabel="name"
-              placeholder="Select a Language"
-              filter
-              style={{ border: 0 }}
+            />
+            <Button
+              icon="pi pi-ellipsis-h"
+              text
+              aria-label="Filter"
+              onClick={() => setFromLanguageShow(true)}
+              tooltip="More languages"
+              tooltipOptions={{
+                position: "bottom",
+                mouseTrack: true,
+                mouseTrackTop: 15,
+              }}
             />
           </div>
-          <div className="flex mt-5">
+          <div className="flex">
             <div
               className={`border rounded-lg pt-4 pb-10 relative transition-all duration-200 w-full ${
                 isFocus ? "border-indigo-600" : "border-gray-300"
@@ -271,21 +409,29 @@ const Translate = () => {
         </div>
         <div>
           <div className="flex">
-            <Dropdown
-              value={activeLanguage2}
-              onChange={(e) => {
+            <TabMenu
+              model={toLanguage}
+              className="ml-2"
+              activeIndex={activeIndex2}
+              onTabChange={(e) => {
                 setActiveLanguage2(e.value);
-                setTargetLang(e.value.code);
-                setTargetLangFull(e.value);
+                setActiveIndex2(e.index);
               }}
-              options={Languages}
-              optionLabel="name"
-              placeholder="Select a Language"
-              filter
-              style={{ border: 0 }}
+            />
+            <Button
+              icon="pi pi-ellipsis-h"
+              text
+              aria-label="Filter"
+              onClick={() => setToLanguageShow(true)}
+              tooltip="More languages"
+              tooltipOptions={{
+                position: "bottom",
+                mouseTrack: true,
+                mouseTrackTop: 15,
+              }}
             />
           </div>
-          <div className="flex mt-5">
+          <div className="flex">
             <div
               className={`rounded-lg h-auto bg-gray-100 pt-4 pb-10 relative transition-all duration-200 w-full `}
             >
@@ -331,7 +477,7 @@ const Translate = () => {
         <Button
           label="Translate"
           loading={isLoading}
-          disabled={!value || !targetlang || !sourcelang}
+          disabled={!value || !activeLanguage || !activeLanguage2}
           onClick={handleSubmit}
           icon="pi pi-arrow-right-arrow-left"
           size="small"

@@ -16,15 +16,13 @@ const ImageGen = () => {
 
   const options = {
     method: "POST",
-    url: "https://ai-image-generator3.p.rapidapi.com/generate",
+    url: "https://api.openai.com/v1/images/generations",
     headers: {
       "content-type": "application/json",
-      "X-RapidAPI-Key": "9f7697b11dmsh392737e66bf0befp13cfafjsn205dbfa5888c",
-      "X-RapidAPI-Host": "ai-image-generator3.p.rapidapi.com",
+      "api-key": "85e540e6-08d7-4a11-896d-7dca49648f43",
     },
     data: {
-      prompt: prompt,
-      page: 1,
+      text: prompt,
     },
   };
 

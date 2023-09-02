@@ -9,7 +9,7 @@ const NavTabLinks = () => {
     setActiveApp(value);
   };
   return (
-    <div className="flex gap-3 flex-wrap">
+    <div className="flex gap-3 overflow-x-auto tab-links">
       <TabLink
         icon={<i className="pi pi-language"></i>}
         value={"translate"}
@@ -24,13 +24,13 @@ const NavTabLinks = () => {
         active={activeApp}
         handleClick={setHandleActive}
       />
-      <TabLink
+      {/* <TabLink
         icon={<i className="pi pi-image"></i>}
         name={"Image generator"}
         value={"image-generator"}
         active={activeApp}
         handleClick={setHandleActive}
-      />
+      /> */}
     </div>
   );
 };
