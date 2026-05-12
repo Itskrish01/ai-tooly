@@ -4,33 +4,63 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Geist"', '"Inter"', "ui-sans-serif", "system-ui", "sans-serif"],
-        mono: ['"Geist Mono"', "ui-monospace", "monospace"],
+        // Display + body lean monospace for the terminal-workstation feel.
+        sans: ['"Geist"', "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: [
+          '"JetBrains Mono"',
+          '"Geist Mono"',
+          "ui-monospace",
+          "SFMono-Regular",
+          "monospace",
+        ],
+        display: [
+          '"JetBrains Mono"',
+          "ui-monospace",
+          "SFMono-Regular",
+          "monospace",
+        ],
       },
       colors: {
         bg: {
-          DEFAULT: "#07080a",
-          1: "#0b0d10",
-          2: "#111418",
-          3: "#161a20",
+          DEFAULT: "#0a0a0a",
+          1: "#101010",
+          2: "#161616",
+          3: "#1c1c1c",
+          4: "#242424",
         },
         line: {
-          DEFAULT: "rgba(255,255,255,0.08)",
-          strong: "rgba(255,255,255,0.14)",
+          DEFAULT: "rgba(255,255,255,0.06)",
+          strong: "rgba(255,255,255,0.12)",
         },
         fg: {
-          DEFAULT: "#e7e9ee",
-          dim: "#9aa1ac",
-          mute: "#6b7280",
+          DEFAULT: "#ededed",
+          dim: "#8a8a8a",
+          mute: "#5a5a5a",
         },
+        // Lime + amber: terminal-flavored, breaks out of "AI tool blue".
         accent: {
-          DEFAULT: "#5b8cff",
-          2: "#7c5cff",
+          DEFAULT: "#bef264",
+          2: "#a3e635",
+          ink: "#0a0a0a",
         },
+        warn: "#fbbf24",
+        danger: "#f87171",
       },
       boxShadow: {
-        ring: "0 0 0 1px rgba(255,255,255,0.08)",
-        card: "0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 30px -12px rgba(0,0,0,0.5)",
+        ring: "0 0 0 1px rgba(255,255,255,0.06)",
+        card: "0 1px 0 rgba(255,255,255,0.03) inset, 0 24px 40px -24px rgba(0,0,0,0.7)",
+        glow: "0 0 0 1px rgba(190,242,100,0.20), 0 0 24px -4px rgba(190,242,100,0.25)",
+      },
+      keyframes: {
+        blink: { "0%,49%": { opacity: 1 }, "50%,100%": { opacity: 0 } },
+        scan: {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(100%)" },
+        },
+      },
+      animation: {
+        blink: "blink 1s steps(2, start) infinite",
+        scan: "scan 6s linear infinite",
       },
     },
   },

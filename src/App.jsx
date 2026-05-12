@@ -1,104 +1,98 @@
 import { useContext } from "react";
 import "./App.css";
-import Navbar from "./components/Navbar";
-import NavTabLinks from "./components/NavTabLinks";
-import { AppContext } from "./context";
+import { AppContext, TOOLS } from "./context";
+import Sidebar from "./components/Sidebar";
+import StatusBar from "./components/StatusBar";
+
 import Translate from "./components/AppComponent/Translate";
 import Rephrase from "./components/AppComponent/Rephrase";
-import ImageGen from "./components/AppComponent/ImageGen";
+import Summarize from "./components/AppComponent/Summarize";
+import GrammarFix from "./components/AppComponent/GrammarFix";
+import CodeExplain from "./components/AppComponent/CodeExplain";
+import Chat from "./components/AppComponent/Chat";
+
+const REGISTRY = {
+  translate: Translate,
+  rephrase: Rephrase,
+  summarize: Summarize,
+  grammar: GrammarFix,
+  "code-explain": CodeExplain,
+  chat: Chat,
+};
 
 function App() {
-  const { activeApp } = useContext(AppContext);
-
-  const meta = {
-    translate: {
-      eyebrow: "Translate",
-      title: "Translate text across 100+ languages.",
-      blurb:
-        "Fast, accurate machine translation with searchable history kept on-device.",
-    },
-    rephrase: {
-      eyebrow: "Rephrase",
-      title: "Rewrite sentences with one click.",
-      blurb:
-        "Paste a sentence, get a cleaner, clearer version. Built for writers, students, and product teams.",
-    },
-    "image-generator": {
-      eyebrow: "Chat",
-      title: "Talk to your local AI.",
-      blurb:
-        "A streaming chat playground wired to ai.krishtasood.in. Ask anything; tokens stream in live.",
-    },
-  };
-
-  const m = meta[activeApp] ?? meta.translate;
-
-  const renderApp = () => {
-    if (activeApp === "translate") return <Translate />;
-    if (activeApp === "rephrase") return <Rephrase />;
-    return <ImageGen />;
-  };
+  const { activeApp, setActiveApp } = useContext(AppContext);
+  const tool = TOOLS.find((t) => t.id === activeApp) || TOOLS[0];
+  const Active = REGISTRY[activeApp] || Translate;
 
   return (
-    <div className="relative min-h-screen bg-bg text-fg">
-      {/* Subtle radial glow */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-x-0 top-0 h-[520px]"
-        style={{
-          background:
-            "radial-gradient(60% 60% at 50% 0%, rgba(91,140,255,0.10) 0%, transparent 70%)",
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 dotgrid opacity-60"
-      />
+    <div className="relative min-h-screen bg-bg text-fg flex">
+      <Sidebar />
 
-      <div className="relative z-10">
-        <Navbar />
+      {/* Main canvas */}
+      <div className="relative flex-1 min-w-0">
+        {/* atmosphere */}
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 gridbg opacity-70"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-x-0 top-0 h-[420px] lime-halo"
+        />
 
-        <main className="mx-auto max-w-6xl px-5 sm:px-8 pt-10 sm:pt-14 pb-24">
-          {/* Hero */}
-          <section className="animate-fade-up">
-            <div className="inline-flex items-center gap-2 rounded-full border border-line bg-bg-1/80 px-3 py-1 text-xs text-fg-dim backdrop-blur">
-              <span className="dot-pulse" />
-              <span className="font-mono uppercase tracking-wider">
-                {m.eyebrow}
+        <div className="relative z-10 px-4 sm:px-8 pt-6 sm:pt-10 pb-16">
+          {/* Mobile brand row + tool picker */}
+          <div className="md:hidden mb-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="grid h-6 w-6 place-items-center rounded-sm bg-accent text-bg">
+                <span className="font-mono text-[10px] font-bold">⌘</span>
               </span>
-              <span className="text-fg-mute">·</span>
-              <span>v0.1 · beta</span>
+              <span className="font-mono text-[12.5px] font-semibold">
+                ai_tooly
+              </span>
             </div>
-            <h1 className="mt-5 max-w-3xl text-3xl sm:text-5xl font-semibold tracking-tight leading-[1.05]">
-              {m.title}
-            </h1>
-            <p className="mt-4 max-w-2xl text-fg-dim text-sm sm:text-base leading-relaxed">
-              {m.blurb}
-            </p>
-          </section>
-
-          <div className="mt-8 flex items-center justify-between gap-4">
-            <NavTabLinks />
-            
+            <select
+              value={activeApp}
+              onChange={(e) => setActiveApp(e.target.value)}
+              className="bg-bg-2 border border-line rounded-sm font-mono text-[11px] text-fg px-2 py-1.5"
+            >
+              {TOOLS.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <section className="mt-6 animate-fade-in">{renderApp()}</section>
-
-          <footer className="mt-20">
-            <div className="hairline mb-5" />
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-fg-mute font-mono">
-              <p>© {new Date().getFullYear()} ai tooly</p>
-              <p className="flex items-center gap-3">
-                <span className="inline-flex items-center gap-1.5">
-                  <span className="dot-pulse" /> all systems operational
-                </span>
-                <span>·</span>
-                <span>built with react + primereact</span>
-              </p>
+          {/* Tool header */}
+          <header className="mb-7 max-w-5xl">
+            <div className="flex items-center gap-2 font-mono text-[10.5px] text-fg-mute uppercase tracking-[0.18em]">
+              <span>~/ai_tooly</span>
+              <span className="text-accent">$</span>
+              <span className="text-fg-dim">
+                {tool.group?.toLowerCase()} / {tool.id}
+              </span>
             </div>
-          </footer>
-        </main>
+            <h1 className="mt-3 font-display text-2xl sm:text-3xl font-semibold tracking-tight text-fg">
+              {tool.name.toLowerCase()}
+              <span className="caret" />
+            </h1>
+            <p className="mt-2 font-mono text-[12.5px] text-fg-dim max-w-xl">
+              {tool.desc}
+            </p>
+          </header>
+
+          <main className="max-w-5xl">
+            <Active key={activeApp} />
+          </main>
+        </div>
+
+        <StatusBar />
       </div>
+
+      {/* spacer for status bar */}
+      <div className="h-7" />
     </div>
   );
 }

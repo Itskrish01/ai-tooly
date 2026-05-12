@@ -1,184 +1,36 @@
-import { useRef, useState } from "react";
-import { ProgressBar } from "primereact/progressbar";
-import { Button } from "primereact/button";
-import { Toast } from "primereact/toast";
-import { stream as aiStream } from "../../lib/aiClient";
+import StreamTool from "./StreamTool";
 
-const PRESETS = [
-  { id: "standard", label: "Standard", hint: "Balanced rewrite" },
-  { id: "concise", label: "Concise", hint: "Shorter & punchier" },
-  { id: "formal", label: "Formal", hint: "Professional tone" },
-  { id: "casual", label: "Casual", hint: "Friendly tone" },
-];
-
-const Rephrase = () => {
-  const toast = useRef(null);
-  const textareaRef = useRef(null);
-
-  const [value, setValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState("");
-  const [tone, setTone] = useState("standard");
-
-  const TONE_PROMPTS = {
-    standard: "Rewrite the user's text to improve clarity and flow while preserving meaning. Keep approximately the same length.",
-    concise: "Rewrite the user's text to be shorter and punchier. Cut filler. Preserve meaning.",
-    formal: "Rewrite the user's text in a formal, professional register suitable for business writing.",
-    casual: "Rewrite the user's text in a friendly, casual conversational tone.",
-  };
-
-  const handleSubmit = async (e) => {
-    e?.preventDefault?.();
-    setIsLoading(true);
-    setResult("");
-    let acc = "";
-    const system = `${TONE_PROMPTS[tone] || TONE_PROMPTS.standard} Return ONLY the rewritten text. No explanations, no quotes, no preamble.`;
-    try {
-      for await (const token of aiStream(value, { system, temperature: 0.6 })) {
-        acc += token;
-        setResult(acc);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.current?.show({
-        severity: "error",
-        summary: "Rephrase failed",
-        detail: error.message || "Please try again later.",
-        life: 4000,
-      });
-    }
-    setIsLoading(false);
-  };
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  };
-
-  return (
-    <div>
-      <Toast ref={toast} />
-
-      {/* Preset row */}
-      <div className="flex flex-wrap items-center gap-1.5 mb-3">
-        <span className="text-[11px] uppercase tracking-wider text-fg-mute font-mono mr-2">
-          Tone
-        </span>
-        {PRESETS.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            onClick={() => setTone(p.id)}
-            className={`px-2.5 py-1 rounded-md text-xs border transition ${
-              tone === p.id
-                ? "bg-accent/10 border-accent/40 text-fg"
-                : "border-line bg-bg-1 text-fg-dim hover:text-fg hover:bg-bg-2"
-            }`}
-            title={p.hint}
-          >
-            {p.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Input card */}
-        <div className="surface overflow-hidden">
-          <div className="flex items-center justify-between border-b border-line bg-bg-1 px-4 py-2.5">
-            <span className="text-[11px] uppercase tracking-wider text-fg-mute font-mono">
-              Input
-            </span>
-            <div className="flex items-center gap-3 text-[11px] font-mono text-fg-mute">
-              <span className={value.length === 1000 ? "text-red-400" : ""}>
-                {value.length} / 1000
-              </span>
-              {value && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setValue("");
-                    setResult("");
-                  }}
-                  className="text-fg-dim hover:text-fg transition"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-          </div>
-          <textarea
-            ref={textareaRef}
-            value={value}
-            onChange={handleChange}
-            placeholder="Paste a sentence or paragraph to rephrase…"
-            maxLength={1000}
-            className="w-full resize-none bg-transparent px-4 py-4 text-base leading-relaxed text-fg placeholder:text-fg-mute focus:outline-none min-h-[260px]"
-          />
-        </div>
-
-        {/* Output card */}
-        <div className="surface overflow-hidden relative">
-          <div className="flex items-center justify-between border-b border-line bg-bg-1 px-4 py-2.5">
-            <span className="text-[11px] uppercase tracking-wider text-fg-mute font-mono flex items-center gap-2">
-              Output
-              {isLoading && <span className="shimmer-text">processing</span>}
-            </span>
-            {result && !isLoading && (
-              <button
-                type="button"
-                className="inline-flex items-center gap-1.5 text-xs text-fg-dim hover:text-fg transition"
-                onClick={() =>
-                  navigator.clipboard.writeText(result).then(() =>
-                    toast.current?.show({
-                      severity: "success",
-                      summary: "Copied",
-                      detail: "Copied to clipboard",
-                      life: 2000,
-                    })
-                  )
-                }
-              >
-                <i className="pi pi-copy" style={{ fontSize: 11 }} />
-                Copy
-              </button>
-            )}
-          </div>
-          {isLoading && (
-            <ProgressBar
-              mode="indeterminate"
-              style={{ height: 2, position: "absolute", top: 41, width: "100%" }}
-            />
-          )}
-          <textarea
-            value={result}
-            placeholder={
-              isLoading ? "Rewriting…" : "Your rephrased text will appear here."
-            }
-            disabled
-            className="w-full resize-none bg-transparent px-4 py-4 text-base leading-relaxed text-fg placeholder:text-fg-mute focus:outline-none min-h-[260px]"
-          />
-        </div>
-      </div>
-
-      {/* Action bar */}
-      <div className="mt-4 flex items-center justify-between rounded-lg border border-line bg-bg-1 px-3 py-2.5">
-        <div className="flex items-center gap-2 text-[11px] text-fg-mute font-mono">
-          <span className="dot-pulse" />
-          model: ai.krishtasood.in · tone: {tone}
-        </div>
-        <Button
-          label={isLoading ? "Rephrasing" : "Rephrase"}
-          disabled={!value}
-          onClick={handleSubmit}
-          loading={isLoading}
-          icon="pi pi-bolt"
-        />
-      </div>
-    </div>
-  );
+const TONE = {
+  standard:
+    "Rewrite the user's text to improve clarity and flow while preserving meaning. Keep approximately the same length. Return ONLY the rewritten text.",
+  concise:
+    "Rewrite the user's text to be shorter and punchier. Cut filler. Preserve meaning. Return ONLY the rewritten text.",
+  formal:
+    "Rewrite the user's text in a formal, professional register suitable for business writing. Return ONLY the rewritten text.",
+  casual:
+    "Rewrite the user's text in a friendly, casual conversational tone. Return ONLY the rewritten text.",
+  academic:
+    "Rewrite the user's text in an academic register with precise vocabulary and formal structure. Return ONLY the rewritten text.",
 };
+
+const Rephrase = () => (
+  <StreamTool
+    eyebrow="Rephrase"
+    inputLabel="draft.txt"
+    outputLabel="rephrased.txt"
+    placeholder="Paste a sentence or paragraph to rewrite…"
+    actionLabel="Rephrase"
+    options={[
+      { id: "standard", label: "Standard" },
+      { id: "concise", label: "Concise" },
+      { id: "formal", label: "Formal" },
+      { id: "casual", label: "Casual" },
+      { id: "academic", label: "Academic" },
+    ]}
+    defaultOption="standard"
+    maxLength={2000}
+    buildSystem={({ option }) => TONE[option] || TONE.standard}
+  />
+);
 
 export default Rephrase;
