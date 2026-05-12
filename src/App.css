@@ -1,43 +1,298 @@
-@import url("https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap");
 
-.robot-slab {
-  font-family: "Roboto Slab", serif;
+:root {
+  --bg: #07080a;
+  --bg-1: #0b0d10;
+  --bg-2: #111418;
+  --bg-3: #161a20;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.14);
+  --fg: #e7e9ee;
+  --fg-dim: #9aa1ac;
+  --fg-mute: #6b7280;
+  --accent: #5b8cff;
+  --accent-2: #7c5cff;
+  --accent-glow: rgba(91, 140, 255, 0.35);
 }
 
+html,
+body,
+#root {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Geist", "Inter", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* legacy hooks (kept so old class names won't crash anything) */
+.robot-slab,
 .cabin-font {
-  font-family: "Cabin", sans-serif;
+  font-family: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.font-mono,
+code,
+kbd {
+  font-family: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* subtle dot grid background */
+.dotgrid {
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.06) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+  background-position: -1px -1px;
+}
+
+.surface {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.surface-2 {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 10px;
+  height: 10px;
 }
-
-/* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: transparent;
 }
-
-/* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #979797;
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 100px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+  background-clip: padding-box;
+  border: 2px solid transparent;
 }
 
 .tab-links::-webkit-scrollbar {
-  height: 5px;
+  height: 6px;
 }
-
-/* Track */
 .tab-links::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: transparent;
 }
-
-/* Handle */
 .tab-links::-webkit-scrollbar-thumb {
-  background: #979797;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 100px;
 }
 
+::selection {
+  background: rgba(91, 140, 255, 0.35);
+  color: #fff;
+}
+
+/* PrimeReact dark overrides */
 .p-sidebar-content {
   padding: 0 !important;
 }
+.p-sidebar {
+  background: var(--bg-1) !important;
+  color: var(--fg) !important;
+  border-left: 1px solid var(--line) !important;
+}
+.p-sidebar .p-sidebar-header {
+  background: transparent !important;
+  color: var(--fg) !important;
+}
+.p-sidebar .p-sidebar-icon {
+  color: var(--fg) !important;
+}
+
+.p-inputtext {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--fg) !important;
+  border-radius: 10px !important;
+  padding: 12px 14px 12px 40px !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+  font-family: "Geist", "Inter", sans-serif !important;
+  font-size: 14px !important;
+}
+.p-inputtext::placeholder {
+  color: var(--fg-mute) !important;
+}
+.p-inputtext:focus,
+.p-inputtext:enabled:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(91, 140, 255, 0.18) !important;
+  outline: none !important;
+}
+
+.p-input-icon-left > i:first-of-type {
+  left: 14px !important;
+  color: var(--fg-mute) !important;
+}
+
+.p-button {
+  border-radius: 10px !important;
+  font-family: "Geist", "Inter", sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  letter-spacing: -0.005em !important;
+  padding: 9px 14px !important;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    transform 0.15s ease !important;
+}
+.p-button:not(.p-button-text):not(.p-button-outlined) {
+  background: #ffffff !important;
+  border: 1px solid #ffffff !important;
+  color: #07080a !important;
+  box-shadow: none !important;
+}
+.p-button:not(.p-button-text):not(.p-button-outlined):hover {
+  background: #e7e9ee !important;
+  border-color: #e7e9ee !important;
+}
+.p-button:not(.p-button-text):not(.p-button-outlined):disabled {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: var(--fg-mute) !important;
+  opacity: 1 !important;
+}
+.p-button.p-button-outlined {
+  background: transparent !important;
+  border: 1px solid var(--line-strong) !important;
+  color: var(--fg) !important;
+}
+.p-button.p-button-outlined:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+.p-button.p-button-text {
+  color: var(--fg-dim) !important;
+  background: transparent !important;
+}
+.p-button.p-button-text:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--fg) !important;
+}
+.p-button .p-button-icon {
+  font-size: 12px !important;
+}
+
+.p-tabmenu {
+  background: transparent !important;
+}
+.p-tabmenu .p-tabmenu-nav {
+  background: transparent !important;
+  border: none !important;
+  gap: 2px;
+}
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-bottom: none !important;
+  color: var(--fg-dim) !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  transition: background 0.15s ease, color 0.15s ease !important;
+}
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: var(--fg) !important;
+}
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: var(--fg) !important;
+}
+.p-tabmenu .p-tabmenu-nav .p-tabmenu-ink-bar {
+  display: none !important;
+}
+
+.p-progressbar {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 0 !important;
+}
+.p-progressbar .p-progressbar-value {
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%) !important;
+}
+
+.p-toast .p-toast-message {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--fg) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(20px);
+}
+
+.p-image-preview-indicator {
+  background: rgba(7, 8, 10, 0.7) !important;
+  backdrop-filter: blur(8px);
+}
+
+.dot-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #4ade80;
+  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6);
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.55); }
+  70% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    rgba(231, 233, 238, 0.35) 0%,
+    rgba(231, 233, 238, 1) 50%,
+    rgba(231, 233, 238, 0.35) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 1.8s linear infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--line-strong),
+    transparent
+  );
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fadeUp 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out both;
+}
+
+/* caret accent */
+textarea, input { caret-color: var(--accent); }

@@ -1,16 +1,25 @@
 const TabLink = ({ icon, name, handleClick, value, active }) => {
+  const isActive = active === value;
   return (
-    <div
-      className={`${
-        active === value
-          ? "bg-indigo-400/30 border border-indigo-500"
-          : "border-gray-300 border"
-      }   flex items-center cursor-pointer select-none transition-all gap-2 cabin-font font-semibold   px-3 py-1 text-indigo-600 rounded`}
+    <button
+      type="button"
       onClick={() => handleClick(value)}
+      className={`flex items-center gap-2 whitespace-nowrap rounded-md px-3 py-1.5 text-[13px] font-medium transition select-none
+        ${
+          isActive
+            ? "bg-bg-3 text-fg shadow-ring"
+            : "text-fg-dim hover:text-fg hover:bg-bg-2"
+        }`}
     >
-      {icon}
-      <p className="sm:text-base text-sm whitespace-nowrap">{name}</p>
-    </div>
+      <span
+        className={`grid h-4 w-4 place-items-center transition ${
+          isActive ? "text-accent" : "text-fg-mute"
+        }`}
+      >
+        {icon}
+      </span>
+      <span>{name}</span>
+    </button>
   );
 };
 

@@ -5,31 +5,28 @@ import { AppContext } from "../context";
 const NavTabLinks = () => {
   const { activeApp, setActiveApp } = useContext(AppContext);
 
-  const setHandleActive = (value) => {
-    setActiveApp(value);
-  };
   return (
-    <div className="flex gap-3 overflow-x-auto tab-links">
+    <div className="tab-links inline-flex gap-1 overflow-x-auto rounded-lg border border-line bg-bg-1 p-1">
       <TabLink
-        icon={<i className="pi pi-language"></i>}
-        value={"translate"}
-        name={"Translate"}
+        icon={<i className="pi pi-language" style={{ fontSize: 12 }}></i>}
+        value="translate"
+        name="Translate"
         active={activeApp}
-        handleClick={setHandleActive}
+        handleClick={setActiveApp}
       />
       <TabLink
-        icon={<i className="pi pi-bolt"></i>}
-        value={"rephrase"}
-        name={"Rephrase"}
+        icon={<i className="pi pi-bolt" style={{ fontSize: 12 }}></i>}
+        value="rephrase"
+        name="Rephrase"
         active={activeApp}
-        handleClick={setHandleActive}
+        handleClick={setActiveApp}
       />
       {/* <TabLink
-        icon={<i className="pi pi-image"></i>}
-        name={"Image generator"}
-        value={"image-generator"}
+        icon={<i className="pi pi-image" style={{ fontSize: 12 }}></i>}
+        value="image-generator"
+        name="Image"
         active={activeApp}
-        handleClick={setHandleActive}
+        handleClick={setActiveApp}
       /> */}
     </div>
   );
