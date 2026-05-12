@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { ProgressBar } from "primereact/progressbar";
 import { Button } from "primereact/button";
-import axios from "axios";
 import { Toast } from "primereact/toast";
+import { stream as aiStream } from "../../lib/aiClient";
 
 const PRESETS = [
   { id: "standard", label: "Standard", hint: "Balanced rewrite" },
@@ -20,30 +20,31 @@ const Rephrase = () => {
   const [result, setResult] = useState("");
   const [tone, setTone] = useState("standard");
 
-  const options = {
-    method: "POST",
-    url: "https://paraphraser1.p.rapidapi.com/",
-    headers: {
-      "content-type": "application/json",
-      "X-RapidAPI-Key": "a244a76a06msh533558e4eb0c0e0p1a2050jsn84873ca3f3a9",
-      "X-RapidAPI-Host": "paraphraser1.p.rapidapi.com",
-    },
-    data: { input: value },
+  const TONE_PROMPTS = {
+    standard: "Rewrite the user's text to improve clarity and flow while preserving meaning. Keep approximately the same length.",
+    concise: "Rewrite the user's text to be shorter and punchier. Cut filler. Preserve meaning.",
+    formal: "Rewrite the user's text in a formal, professional register suitable for business writing.",
+    casual: "Rewrite the user's text in a friendly, casual conversational tone.",
   };
 
   const handleSubmit = async (e) => {
     e?.preventDefault?.();
     setIsLoading(true);
+    setResult("");
+    let acc = "";
+    const system = `${TONE_PROMPTS[tone] || TONE_PROMPTS.standard} Return ONLY the rewritten text. No explanations, no quotes, no preamble.`;
     try {
-      const response = await axios.request(options);
-      setResult(response.data.output);
+      for await (const token of aiStream(value, { system, temperature: 0.6 })) {
+        acc += token;
+        setResult(acc);
+      }
     } catch (error) {
       console.error(error);
       toast.current?.show({
         severity: "error",
-        summary: "Error",
-        detail: "Something went wrong. Please try again later.",
-        life: 3000,
+        summary: "Rephrase failed",
+        detail: error.message || "Please try again later.",
+        life: 4000,
       });
     }
     setIsLoading(false);
@@ -166,7 +167,7 @@ const Rephrase = () => {
       <div className="mt-4 flex items-center justify-between rounded-lg border border-line bg-bg-1 px-3 py-2.5">
         <div className="flex items-center gap-2 text-[11px] text-fg-mute font-mono">
           <span className="dot-pulse" />
-          model: paraphraser-v1 · tone: {tone}
+          model: ai.krishtasood.in · tone: {tone}
         </div>
         <Button
           label={isLoading ? "Rephrasing" : "Rephrase"}

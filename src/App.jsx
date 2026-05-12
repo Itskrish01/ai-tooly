@@ -24,9 +24,10 @@ function App() {
         "Paste a sentence, get a cleaner, clearer version. Built for writers, students, and product teams.",
     },
     "image-generator": {
-      eyebrow: "Image",
-      title: "Generate images from a prompt.",
-      blurb: "Describe what you want and receive a grid of variations in seconds.",
+      eyebrow: "Chat",
+      title: "Talk to your local AI.",
+      blurb:
+        "A streaming chat playground wired to ai.krishtasood.in. Ask anything; tokens stream in live.",
     },
   };
 

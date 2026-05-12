@@ -3,10 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import { Languages } from "../../data/languages";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
-import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { Sidebar } from "primereact/sidebar";
 import { ProgressBar } from "primereact/progressbar";
+import { stream as aiStream } from "../../lib/aiClient";
 
 const QUICK = [
   { label: "English", langcode: "en" },
@@ -96,44 +96,33 @@ const Translate = () => {
     }
   };
 
-  const options = {
-    method: "POST",
-    url: "https://rapid-translate-multi-traduction.p.rapidapi.com/t",
-    headers: {
-      "content-type": "application/json",
-      "X-RapidAPI-Key": "a244a76a06msh533558e4eb0c0e0p1a2050jsn84873ca3f3a9",
-      "X-RapidAPI-Host": "rapid-translate-multi-traduction.p.rapidapi.com",
-    },
-    data: {
-      from: activeLanguage.langcode,
-      to: activeLanguage2.langcode,
-      q: value,
-    },
-  };
-
   const handleSubmit = async (e) => {
     e?.preventDefault?.();
     setIsLoading(true);
+    setTranslationResult("");
+    let acc = "";
+    const system = `You are a professional translator. Translate the user text from ${activeLanguage.label} to ${activeLanguage2.label}. Return ONLY the translated text. No explanations, no quotes, no language labels, no preamble.`;
     try {
-      const response = await axios.request(options);
+      for await (const token of aiStream(value, { system, temperature: 0.2 })) {
+        acc += token;
+        setTranslationResult(acc);
+      }
       const translationObject = {
         id: uuidv4(),
-        translation: response.data[0],
+        translation: acc.trim(),
         value,
         sourcelang: activeLanguage.label,
         targetlang: activeLanguage2.label,
       };
-      setTranslationResult(translationObject.translation);
       saveTranslationToLocalStorage(translationObject);
     } catch (error) {
+      console.error(error);
       toast.current?.show({
         severity: "error",
-        summary: "Error",
-        detail:
-          "Something went wrong. Please try again or pick a supported language.",
+        summary: "Translation failed",
+        detail: error.message || "Please check the AI service is reachable.",
         life: 5000,
       });
-      console.error(error);
     }
     setIsLoading(false);
   };
@@ -412,7 +401,10 @@ const Translate = () => {
 
         {/* Action bar */}
         <div className="flex items-center justify-between border-t border-line bg-bg-1 px-3 py-2.5">
-          
+          <div className="flex items-center gap-2 text-[11px] text-fg-mute font-mono">
+            <span className="dot-pulse" />
+            <span>powered by ai.krishtasood.in</span>
+          </div>
           <div className="flex items-center gap-2">
             <Button
               label="Translate"

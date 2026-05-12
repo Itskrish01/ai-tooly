@@ -21,13 +21,13 @@ const NavTabLinks = () => {
         active={activeApp}
         handleClick={setActiveApp}
       />
-      {/* <TabLink
-        icon={<i className="pi pi-image" style={{ fontSize: 12 }}></i>}
+      <TabLink
+        icon={<i className="pi pi-comments" style={{ fontSize: 12 }}></i>}
         value="image-generator"
-        name="Image"
+        name="Chat"
         active={activeApp}
         handleClick={setActiveApp}
-      /> */}
+      />
     </div>
   );
 };
