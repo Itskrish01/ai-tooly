@@ -1,4 +1,100 @@
-@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap");
+
+/* Use Fira Code with ligatures wherever .font-code is applied */
+.font-code,
+pre.font-code,
+code.font-code,
+.font-code * {
+  font-family: "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
+  font-feature-settings: "calt" 1, "liga" 1, "ss01" 1, "ss02" 1, "ss03" 1;
+  font-variant-ligatures: contextual;
+}
+
+/* ───────── highlight.js theme — VSCode Dark+ tinted to lime/near-black ───────── */
+.hljs {
+  color: #e6e6e6;
+  background: transparent;
+}
+/* keywords, control flow */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-link {
+  color: #c084fc; /* violet — keywords */
+  font-weight: 500;
+}
+/* built-ins, types, classes */
+.hljs-built_in,
+.hljs-type,
+.hljs-class .hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__ {
+  color: #4ec9b0; /* teal — types (VSCode Dark+) */
+}
+/* function names */
+.hljs-title,
+.hljs-title.function_,
+.hljs-function .hljs-title {
+  color: #bef264; /* lime — accent for functions, our brand */
+}
+/* strings */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet {
+  color: #fbbf24; /* amber — strings */
+}
+/* numbers, regexp */
+.hljs-number,
+.hljs-regexp {
+  color: #f59e0b;
+}
+/* attributes / properties */
+.hljs-attr,
+.hljs-attribute,
+.hljs-property,
+.hljs-variable,
+.hljs-template-variable {
+  color: #93c5fd; /* soft blue */
+}
+.hljs-params {
+  color: #e6e6e6;
+}
+/* comments */
+.hljs-comment,
+.hljs-quote,
+.hljs-meta {
+  color: #6b7280; /* slate-500 */
+  font-style: italic;
+}
+/* tags / html */
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #7dd3fc; /* sky */
+}
+.hljs-doctag,
+.hljs-strong {
+  color: #fbbf24;
+  font-weight: 600;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-deletion {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.08);
+}
+.hljs-addition {
+  color: #a3e635;
+  background: rgba(190, 242, 100, 0.08);
+}
+.hljs-operator,
+.hljs-punctuation {
+  color: #d1d5db;
+}
 
 :root {
   --bg: #0a0a0a;

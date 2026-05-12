@@ -19,6 +19,16 @@ export default {
           "SFMono-Regular",
           "monospace",
         ],
+        // Dedicated code font (ligatures, programming-tuned glyphs)
+        code: [
+          '"Fira Code"',
+          '"JetBrains Mono"',
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Consolas",
+          "monospace",
+        ],
       },
       colors: {
         bg: {
