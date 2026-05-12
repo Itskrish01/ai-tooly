@@ -8,7 +8,6 @@ export const TOOLS = [
   { id: "summarize", name: "Summarize", icon: "pi-align-left", group: "Transform", desc: "Compress long text into key points" },
   { id: "grammar", name: "Grammar Fix", icon: "pi-check-circle", group: "Transform", desc: "Fix grammar, spelling, and clarity" },
   { id: "code-explain", name: "Code Explain", icon: "pi-code", group: "Develop", desc: "Explain a snippet line-by-line" },
-  { id: "chat", name: "Chat", icon: "pi-comments", group: "Interact", desc: "Streaming conversation with the model" },
 ];
 
 const AppProvider = ({ children }) => {

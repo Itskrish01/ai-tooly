@@ -9,7 +9,6 @@ import Rephrase from "./components/AppComponent/Rephrase";
 import Summarize from "./components/AppComponent/Summarize";
 import GrammarFix from "./components/AppComponent/GrammarFix";
 import CodeExplain from "./components/AppComponent/CodeExplain";
-import Chat from "./components/AppComponent/Chat";
 
 const REGISTRY = {
   translate: Translate,
@@ -17,7 +16,6 @@ const REGISTRY = {
   summarize: Summarize,
   grammar: GrammarFix,
   "code-explain": CodeExplain,
-  chat: Chat,
 };
 
 function App() {
