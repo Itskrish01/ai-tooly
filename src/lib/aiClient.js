@@ -7,7 +7,7 @@
 
 const BASE_URL = import.meta.env.VITE_AI_URL || "https://ai.krishtasood.in";
 const API_KEY = import.meta.env.VITE_AI_KEY || "";
-const DEFAULT_MODEL =  "qwen3.5:4b";
+const DEFAULT_MODEL =  "qwen3.5:9b";
 
 function headers() {
   const h = { "Content-Type": "application/json" };
